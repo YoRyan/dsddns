@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"io"
+	"math/rand"
 	"net"
 	"net/http"
 	"strings"
@@ -36,7 +37,12 @@ func (l IPLookup) WebFacingIP(ctx context.Context, rtype RecordType, intname str
 	key := ipSource{rtype, intname}
 	since := l.retrieved[key]
 	if time.Now().After(since.Add(staleTime)) {
-		for _, service := range ipServices {
+		shuffled := make([]ipService, len(ipServices))
+		copy(shuffled, ipServices)
+		rand.Shuffle(len(shuffled), func(i, j int) {
+			shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+		})
+		for _, service := range shuffled {
 			var (
 				ip  net.IP
 				err error
