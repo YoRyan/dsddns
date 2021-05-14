@@ -3,9 +3,14 @@ package updater
 import (
 	"context"
 	"net"
+	"time"
 
 	"github.com/cloudflare/cloudflare-go"
 	"gopkg.in/yaml.v3"
+)
+
+const (
+	cloudflareCooldown = 15 * time.Minute
 )
 
 type CloudflareService struct {
@@ -23,7 +28,7 @@ type cloudflareServiceConf struct {
 	TTL      int
 }
 
-func (s *CloudflareService) Submit(ctx context.Context, rtype RecordType, ip net.IP) error {
+func (s *CloudflareService) Submit(ctx context.Context, rtype RecordType, ip net.IP) (retryAfter time.Duration, err error) {
 	var ttl int
 	if s.conf.TTL <= 0 {
 		ttl = 1
@@ -36,10 +41,14 @@ func (s *CloudflareService) Submit(ctx context.Context, rtype RecordType, ip net
 		Content: ip.String(),
 		TTL:     ttl,
 	}
-	if err := s.api.UpdateDNSRecord(ctx, s.conf.ZoneID, s.conf.RecordID, record); err != nil {
-		return err
+	err = s.api.UpdateDNSRecord(ctx, s.conf.ZoneID, s.conf.RecordID, record)
+	switch err.(type) {
+	case cloudflare.APIRequestError:
+		retryAfter = cloudflareCooldown
+		return
+	default:
+		return
 	}
-	return nil
 }
 
 func (s *CloudflareService) Identifier() string {

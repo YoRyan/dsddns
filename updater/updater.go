@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"strings"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -37,6 +38,7 @@ type Updater struct {
 	Service    RecordService
 	IPOffset   net.IP
 	IPMaskBits int
+	tryAfter   time.Time
 	submitted  net.IP
 	lookup     IPLookup
 	yaml.Unmarshaler
@@ -101,13 +103,14 @@ func (u *Updater) UnmarshalYAML(value *yaml.Node) error {
 func (u *Updater) Update(ctx context.Context, logger *log.Logger) {
 	rawip := u.lookup.WebFacingIP(ctx, u.Type, u.Interface)
 	ip := AddIP(MaskIP(rawip, u.IPMaskBits), u.IPOffset)
-	if !ip.Equal(u.submitted) {
+	if !ip.Equal(u.submitted) && time.Now().After(u.tryAfter) {
 		domain := u.Service.Identifier()
 		logger.Println(domain, RecordTypeString(u.Type), "➤", ip.String())
 
-		if err := u.Service.Submit(ctx, u.Type, ip); err != nil {
+		if retryAfter, err := u.Service.Submit(ctx, u.Type, ip); err != nil {
 			logger.Println(domain, "✗", err)
-			// Wait for the next update cycle for another attempt.
+			logger.Println(domain, "next attempt in", retryAfter.String())
+			u.tryAfter = time.Now().Add(retryAfter)
 		} else {
 			u.submitted = ip
 		}
@@ -189,7 +192,7 @@ func (u *Updaters) Update(ctx context.Context, logger *log.Logger) {
 // dynamic DNS service.
 type RecordService interface {
 	// Submit a new record value.
-	Submit(context.Context, RecordType, net.IP) error
+	Submit(context.Context, RecordType, net.IP) (retryAfter time.Duration, err error)
 
 	// Retrieve a human-readable name for this record.
 	Identifier() string
