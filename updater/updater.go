@@ -58,8 +58,6 @@ func (u *Updater) UnmarshalYAML(value *yaml.Node) error {
 	}
 
 	switch strings.ToLower(aux.Service) {
-	case "test":
-		u.Service = &TestService{}
 	case "cloudflare":
 		u.Service = &CloudflareService{}
 	case "duck":
