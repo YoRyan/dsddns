@@ -62,6 +62,8 @@ func (u *Updater) UnmarshalYAML(value *yaml.Node) error {
 		u.Service = &TestService{}
 	case "cloudflare":
 		u.Service = &CloudflareService{}
+	case "duck":
+		u.Service = &DuckService{}
 	case "google":
 		u.Service = &GoogleService{}
 	default:

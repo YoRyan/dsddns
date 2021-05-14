@@ -13,6 +13,7 @@ DsDDNS is the world's first dynamic DNS client built from the ground-up for IPv6
 Currently, DsDDNS can manage A and AAAA records for the following services:
 
 - Cloudflare
+- Duck DNS
 - Google Domains
 
 ## Installation
@@ -93,6 +94,17 @@ The following keys are optional:
 </details>
 
 <details>
+<summary>Duck DNS</summary>
+
+The following keys are mandatory for Duck DNS-managed records:
+
+| Key | Type | Value |
+| --- | --- | --- |
+| subname | string | The domain managed by this record. Should not include the ".duckdns.org" suffix. |
+| token | string | The API token for this dynamic DNS client. |
+</details>
+
+<details>
 <summary>Google Domains</summary>
 
 To [use a dynamic DNS client](https://support.google.com/domains/answer/6147083?hl=en) with Google Domains, you have to set up a synthetic record for the hostname you want to manage and then generate a username/password combination for the client.
@@ -104,7 +116,6 @@ The following keys are mandatory for Google-managed records:
 | username | string | The username generated for this dynamic DNS client. |
 | password | string | The password generated for this client. |
 | hostname | string | The FQDN for this record. |
-
 </details>
 
 ### Avoiding repetition with merge keys
