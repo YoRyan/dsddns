@@ -4,7 +4,7 @@ DsDDNS is the Dual-Stack Dynamic DNS client. A dynamic DNS client keeps your DNS
 
 DsDDNS is the world's first dynamic DNS client built from the ground-up for IPv6. In comparison to other dynamic DNS clients available on the Internet, including some others written in Go, DsDDNS features:
 
-- First-class support for IPv6, including the ability to update multiple subdomains within a dynamically allocated prefix.
+- First-class support for IPv6, including the ability to update multiple hostnames within a dynamically allocated prefix.
 - Support for determining the lower bits of the address either manually or with SLAAC.
 - Support for managing multiple domains across multiple accounts and services.
 - A single binary and a single configuration file that can be deployed anywhere.
@@ -13,6 +13,7 @@ DsDDNS is the world's first dynamic DNS client built from the ground-up for IPv6
 Currently, DsDDNS can manage A and AAAA records for the following services:
 
 - Cloudflare
+- Google Domains
 
 ## Installation
 
@@ -89,6 +90,21 @@ The following keys are optional:
 | Key | Type | Value |
 | --- | --- | --- |
 | ttl | number | Sets the TTL for this record's updates. If it is not specified, the value 1 (automatic) is used. |
+</details>
+
+<details>
+<summary>Google Domains</summary>
+
+To [use a dynamic DNS client](https://support.google.com/domains/answer/6147083?hl=en) with Google Domains, you have to set up a synthetic record for the hostname you want to manage and then generate a username/password combination for the client.
+
+The following keys are mandatory for Google-managed records:
+
+| Key | Type | Value |
+| --- | --- | --- |
+| username | string | The username generated for this dynamic DNS client. |
+| password | string | The password generated for this client. |
+| hostname | string | The FQDN for this record. |
+
 </details>
 
 ### Avoiding repetition with merge keys
