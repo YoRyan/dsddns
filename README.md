@@ -68,7 +68,7 @@ The following keys are optional:
 
 ### Per-service fields
 
-Other keys only apply to records managed by specific services. Some of them are mandatory.
+Other keys only apply to records managed by specific services. Some of them are required by the service.
 
 <details>
 <summary>Cloudflare</summary>
