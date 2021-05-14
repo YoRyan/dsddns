@@ -104,12 +104,12 @@ func (u *Updater) Update(ctx context.Context, logger *log.Logger) {
 	rawip := u.lookup.WebFacingIP(ctx, u.Type, u.Interface)
 	ip := AddIP(MaskIP(rawip, u.IPMaskBits), u.IPOffset)
 	if !ip.Equal(u.submitted) && time.Now().After(u.tryAfter) {
-		domain := u.Service.Identifier()
-		logger.Println(domain, RecordTypeString(u.Type), "➤", ip.String())
+		id := u.Service.Identifier()
+		logger.Println(id, RecordTypeString(u.Type), "➤", ip.String())
 
 		if retryAfter, err := u.Service.Submit(ctx, u.Type, ip); err != nil {
-			logger.Println(domain, "✗", err)
-			logger.Println(domain, "next attempt in", retryAfter.String())
+			logger.Println(id, "✗", err)
+			logger.Println(id, "next attempt in", retryAfter.String())
 			u.tryAfter = time.Now().Add(retryAfter)
 		} else {
 			u.submitted = ip
