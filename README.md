@@ -55,7 +55,7 @@ Some keys apply to all kinds of records, regardless of service. The following ke
 | Key | Type | Value |
 | --- | --- | --- |
 | type | string | Specifies the type of DNS record. Can be `A` (IPv4) or `AAAA` (IPv6). |
-| service | string | Specifies the dynamic DNS service that manages this record. |
+| service | string | <p>Specifies the dynamic DNS service that manages this record. Must be one of the following values:</p><ul><li>`cloudflare`</li><li>`duck`</li><li>`google`</li></ul> |
 
 The following keys are optional:
 
