@@ -28,10 +28,8 @@ func main() {
 }
 
 func run(ctx context.Context, logger *log.Logger) error {
-	flagSet := flag.NewFlagSet(progName, flag.ExitOnError)
-	flagSet.Parse(os.Args)
-
-	path := flagSet.Arg(1)
+	flag.Parse()
+	path := flag.Arg(0)
 	if path == "" {
 		return errors.New("missing path to a configuration file")
 	}
