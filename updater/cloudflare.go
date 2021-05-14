@@ -15,8 +15,8 @@ type CloudflareService struct {
 
 type cloudflareServiceConf struct {
 	ApiKey   string `yaml:"api_key"`
-	ApiToken string `yaml:"api_token"`
 	ApiEmail string `yaml:"api_email"`
+	ApiToken string `yaml:"api_token"`
 	ZoneID   string `yaml:"zone_id"`
 	RecordID string `yaml:"record_id"`
 	Name     string
