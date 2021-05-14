@@ -80,7 +80,7 @@ The following keys are mandatory for Cloudflare-managed records:
 | api_key | string | If using your global API key, provide it here. |
 | api_email | string | If using your global API key, provide your Cloudflare login here. |
 | api_token | string | If using an API token, provide it here. |
-| name | string | Specify the prefix that identifies this record's subdomain. This should match the "Name" field in your Cloudflare dashboard. |
+| name | string | Specify the full domain managed by this record, including its suffix. |
 | zone_id | string | Specify the identifier of your domain's DNS zone. You can obtain this with the [List Zones](https://api.cloudflare.com/#zone-list-zones) API call. |
 | record_id | string | Specify the identifier of your DNS record. You can obtain this with the [List DNS Records](https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records) API call. |
 
