@@ -36,6 +36,9 @@ func (s *GoogleService) Submit(ctx context.Context, rtype RecordType, ip net.IP)
 	requrl := "https://domains.google.com/nic/update?" + qs.Encode()
 
 	req, err := http.NewRequestWithContext(ctx, "POST", requrl, nil)
+	if err != nil {
+		return
+	}
 	req.SetBasicAuth(s.conf.Username, s.conf.Password)
 	req.Header.Set("User-Agent", "Chrome/41.0")
 
@@ -90,8 +93,7 @@ func (s *GoogleService) SupportsRecord(rtype RecordType) bool {
 
 func (s *GoogleService) UnmarshalYAML(value *yaml.Node) error {
 	s.conf = &googleServiceConf{}
-	err := value.Decode(s.conf)
-	if err != nil {
+	if err := value.Decode(s.conf); err != nil {
 		return err
 	}
 	return nil
