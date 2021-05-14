@@ -12,9 +12,9 @@ DsDDNS is the world's first dynamic DNS client built from the ground-up for IPv6
 
 Currently, DsDDNS can manage A and AAAA records for the following services:
 
-- Cloudflare
-- Duck DNS
-- Google Domains
+- [Cloudflare](https://www.cloudflare.com/dns/)
+- [Duck DNS](https://www.duckdns.org/)
+- [Google Domains](https://domains.google/)
 
 ## Installation
 
