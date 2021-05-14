@@ -42,7 +42,7 @@ func (s *CloudflareService) Submit(ctx context.Context, rtype RecordType, ip net
 	return nil
 }
 
-func (s *CloudflareService) Domain() string {
+func (s *CloudflareService) Identifier() string {
 	return s.conf.Name
 }
 

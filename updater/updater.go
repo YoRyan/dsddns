@@ -102,7 +102,7 @@ func (u *Updater) Update(ctx context.Context, logger *log.Logger) {
 	rawip := u.lookup.WebFacingIP(ctx, u.Type, u.Interface)
 	ip := AddIP(MaskIP(rawip, u.IPMaskBits), u.IPOffset)
 	if !ip.Equal(u.submitted) {
-		domain := u.Service.Domain()
+		domain := u.Service.Identifier()
 		logger.Println(domain, RecordTypeString(u.Type), "➤", ip.String())
 
 		if err := u.Service.Submit(ctx, u.Type, ip); err != nil {
@@ -191,8 +191,8 @@ type RecordService interface {
 	// Submit a new record value.
 	Submit(context.Context, RecordType, net.IP) error
 
-	// Retrieve the domain managed by this record.
-	Domain() string
+	// Retrieve a human-readable name for this record.
+	Identifier() string
 
 	// Determine support for a record type.
 	SupportsRecord(RecordType) bool

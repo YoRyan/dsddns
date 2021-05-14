@@ -13,7 +13,7 @@ func (s *TestService) Submit(_ context.Context, _ RecordType, ip net.IP) error {
 	return nil
 }
 
-func (s *TestService) Domain() string {
+func (s *TestService) Identifier() string {
 	return "test.example.com"
 }
 
