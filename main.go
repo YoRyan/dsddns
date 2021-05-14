@@ -16,7 +16,7 @@ import (
 
 const (
 	progName  = "dsddns"
-	sleepTime = 10 * time.Minute
+	sleepTime = 5 * time.Minute
 )
 
 func main() {
