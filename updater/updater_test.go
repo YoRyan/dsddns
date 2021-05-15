@@ -60,18 +60,18 @@ func TestAddIP(t *testing.T) {
 
 func TestUnmarshalUpdaters(t *testing.T) {
 	data := []byte(`
-- service: "test"
-  type: "AAAA"
-  interface: "eth0"
-  ipoffset: "::1"
-  ipmaskbits: 64`)
+- service: cloudflare
+  type: AAAA
+  interface: eth0
+  ip_offset: ::1
+  ip_mask_bits: 64`)
 	var got Updaters
 	err := yaml.Unmarshal(data, &got)
 	if err != nil {
 		t.Error(err)
 	}
 	if len(got) != 1 {
-		t.Errorf("Number of updaters = %d; want 1", len(got))
+		t.Fatalf("Number of updaters = %d; want 1", len(got))
 	}
 	if got[0].Type != AAAARecord {
 		t.Error("Record type should be AAAA")
