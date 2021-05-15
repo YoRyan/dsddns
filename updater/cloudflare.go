@@ -2,6 +2,7 @@ package updater
 
 import (
 	"context"
+	"errors"
 	"net"
 	"time"
 
@@ -42,13 +43,11 @@ func (s *CloudflareService) Submit(ctx context.Context, rtype RecordType, ip net
 		TTL:     ttl,
 	}
 	err = s.api.UpdateDNSRecord(ctx, s.conf.ZoneID, s.conf.RecordID, record)
-	switch err.(type) {
-	case cloudflare.APIRequestError:
+	var cfErr cloudflare.APIRequestError
+	if errors.As(err, &cfErr) {
 		retryAfter = cloudflareCooldown
-		return
-	default:
-		return
 	}
+	return
 }
 
 func (s *CloudflareService) Identifier() string {
