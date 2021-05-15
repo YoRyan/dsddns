@@ -104,6 +104,10 @@ func (u *Updater) UnmarshalYAML(value *yaml.Node) error {
 // few minutes.
 func (u *Updater) Update(ctx context.Context, logger *log.Logger) {
 	rawip := u.lookup.WebFacingIP(ctx, u.Type, u.Interface)
+	if rawip == nil {
+		return
+	}
+
 	ip := AddIP(MaskIP(rawip, u.IPMaskBits), u.IPOffset)
 	if !ip.Equal(u.submitted) && time.Now().After(u.tryAfter) {
 		id := u.Service.Identifier()
