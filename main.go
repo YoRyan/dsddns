@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -20,6 +21,14 @@ const (
 )
 
 func main() {
+	flag.Usage = func() {
+		out := flag.CommandLine.Output()
+		fmt.Fprintf(out, "Usage of %s: [flag] config\n", os.Args[0])
+		fmt.Fprintln(out, "  -h: show this help")
+		flag.PrintDefaults()
+	}
+	flag.Parse()
+
 	logger := log.New(os.Stdout, progName+": ", log.LstdFlags)
 	if err := run(context.Background(), logger); err != nil {
 		logger.Fatalln(err)
@@ -28,7 +37,6 @@ func main() {
 }
 
 func run(ctx context.Context, logger *log.Logger) error {
-	flag.Parse()
 	path := flag.Arg(0)
 	if path == "" {
 		return errors.New("missing path to a configuration file")
