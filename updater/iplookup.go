@@ -14,7 +14,9 @@ import (
 const staleTime = 10 * time.Minute
 
 var ipServices []ipService = []ipService{
-	icanhazipService{}}
+	icanhazipService{},
+	ipifyService{},
+	wtfismyipService{}}
 
 type ipSource struct {
 	rtype RecordType
@@ -171,6 +173,26 @@ func (_ icanhazipService) IPv4Addr(ctx context.Context, dc dialContext) (net.IP,
 
 func (_ icanhazipService) IPv6Addr(ctx context.Context, dc dialContext) (net.IP, error) {
 	return retrieve(ctx, "https://v6.icanhazip.com", dc)
+}
+
+type ipifyService struct{}
+
+func (_ ipifyService) IPv4Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+	return retrieve(ctx, "https://api.ipify.org", dc)
+}
+
+func (_ ipifyService) IPv6Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+	return retrieve(ctx, "https://api6.ipify.org", dc)
+}
+
+type wtfismyipService struct{}
+
+func (_ wtfismyipService) IPv4Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+	return retrieve(ctx, "https://ipv4.wtfismyip.com/text", dc)
+}
+
+func (_ wtfismyipService) IPv6Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+	return retrieve(ctx, "https://ipv6.wtfismyip.com/text", dc)
 }
 
 func retrieve(ctx context.Context, url string, dc dialContext) (net.IP, error) {
