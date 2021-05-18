@@ -31,6 +31,7 @@ For Linux servers, here is the suggested systemd service definition:
 Description=DsDDNS Dynamic DNS Client
 [Service]
 ExecStart=/path/to/dsddns /etc/dsddns.conf
+Restart=always
 [Install]
 WantedBy=multi-user.target
 ```
