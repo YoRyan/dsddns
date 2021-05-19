@@ -42,7 +42,7 @@ WantedBy=multi-user.target
 
 ### With Docker
 
-If you are a Docker fan, a DsDDNS Dockerfile and Docker image are available. However, be aware that Docker does *not* enable IPv6 support out of the box. (Boo!) Until you [manually assign a prefix](https://docs.docker.com/config/daemon/ipv6/), containers will not be able to use IPv6, and DsDDNS will not be able to manage AAAA records.
+If you are a Docker fan, a DsDDNS Dockerfile and [Docker image](https://hub.docker.com/r/yoryan/dsddns) are available. However, be aware that Docker does *not* enable IPv6 support out of the box. (Boo!) Until you [manually assign a prefix](https://docs.docker.com/config/daemon/ipv6/), containers will not be able to use IPv6, and DsDDNS will not be able to manage AAAA records.
 
 To use the Docker image, bind mount the configuration file to `/etc/dsddns.conf`.
 
