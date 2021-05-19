@@ -68,6 +68,14 @@ records:
     name: ipv6.youngryan.com
 ```
 
+To test the configuration file without making any changes to your DNS records, you can add the `-dryrun` flag:
+
+```
+dsddns -dryrun /etc/dsddns.conf
+```
+
+(To see the other command-line flags available, run `dsddns -help`.)
+
 ### Common fields
 
 Some keys apply to all kinds of records, regardless of service. The following keys *must* be specified:
