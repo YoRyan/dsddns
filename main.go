@@ -20,23 +20,37 @@ const (
 	sleepTime = 5 * time.Minute
 )
 
+type mode int
+
+const (
+	runRepeating mode = iota
+	dryRun
+)
+
 func main() {
 	flag.Usage = func() {
 		out := flag.CommandLine.Output()
 		fmt.Fprintf(out, "Usage of %s: [flag] config\n", os.Args[0])
-		fmt.Fprintln(out, "  -h: show this help")
 		flag.PrintDefaults()
 	}
+	var opDryRun bool
+	flag.BoolVar(&opDryRun, "dryrun", false, "read the configuration file, but do not push any updates")
 	flag.Parse()
 
+	var op mode
+	if opDryRun {
+		op = dryRun
+	} else {
+		op = runRepeating
+	}
 	logger := log.New(os.Stdout, progName+": ", log.LstdFlags)
-	if err := run(context.Background(), logger); err != nil {
+	if err := run(context.Background(), logger, op); err != nil {
 		logger.Fatalln(err)
 		os.Exit(2)
 	}
 }
 
-func run(ctx context.Context, logger *log.Logger) error {
+func run(ctx context.Context, logger *log.Logger, op mode) error {
 	path := flag.Arg(0)
 	if path == "" {
 		return errors.New("missing path to a configuration file")
@@ -52,10 +66,15 @@ func run(ctx context.Context, logger *log.Logger) error {
 		return err
 	}
 
-	for {
-		updaters.Update(ctx, logger)
-		time.Sleep(sleepTime)
+	if op == dryRun {
+		updaters.DryRun(ctx, logger)
+	} else if op == runRepeating {
+		for {
+			updaters.Update(ctx, logger)
+			time.Sleep(sleepTime)
+		}
 	}
+	return nil
 }
 
 func loadConfig(r io.Reader) (updater.Updaters, error) {

@@ -123,6 +123,18 @@ func (u *Updater) Update(ctx context.Context, logger *log.Logger) {
 	}
 }
 
+// DryRun performs an IP address lookup, but does not refresh the record.
+func (u *Updater) DryRun(ctx context.Context, logger *log.Logger) {
+	rawip := u.lookup.WebFacingIP(ctx, u.Type, u.Interface)
+	if rawip == nil {
+		log.Println("failed to look up IP address")
+		return
+	}
+
+	ip := AddIP(MaskIP(rawip, u.IPMaskBits), u.IPOffset)
+	logger.Println(u.Service.Identifier(), RecordTypeString(u.Type), "➤", ip.String())
+}
+
 // SlaacBits returns an IPv6 address with the lower 64 bits derived from the
 // provided MAC address using the EUI-64 derivation.
 func SlaacBits(mac net.HardwareAddr) net.IP {
@@ -191,6 +203,13 @@ func (u *Updaters) UnmarshalYAML(value *yaml.Node) error {
 func (u *Updaters) Update(ctx context.Context, logger *log.Logger) {
 	for _, updater := range *u {
 		updater.Update(ctx, logger)
+	}
+}
+
+// DryRun tests all of the updaters in this slice.
+func (u *Updaters) DryRun(ctx context.Context, logger *log.Logger) {
+	for _, updater := range *u {
+		updater.DryRun(ctx, logger)
 	}
 }
 
