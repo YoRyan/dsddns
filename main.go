@@ -24,6 +24,7 @@ type mode int
 
 const (
 	runRepeating mode = iota
+	runOnce
 	dryRun
 )
 
@@ -35,11 +36,15 @@ func main() {
 	}
 	var opDryRun bool
 	flag.BoolVar(&opDryRun, "dryrun", false, "read the configuration file, but do not push any updates")
+	var opRunOnce bool
+	flag.BoolVar(&opRunOnce, "oneshot", false, "run a single update")
 	flag.Parse()
 
 	var op mode
 	if opDryRun {
 		op = dryRun
+	} else if opRunOnce {
+		op = runOnce
 	} else {
 		op = runRepeating
 	}
@@ -68,6 +73,8 @@ func run(ctx context.Context, logger *log.Logger, op mode) error {
 
 	if op == dryRun {
 		updaters.DryRun(ctx, logger)
+	} else if op == runOnce {
+		updaters.Update(ctx, logger)
 	} else if op == runRepeating {
 		for {
 			updaters.Update(ctx, logger)
