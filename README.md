@@ -18,7 +18,7 @@ Currently, DsDDNS can manage A and AAAA records for the following services:
 
 ## Installation
 
-Grab Windows and Linux binaries from the [releases](https://github.com/YoRyan/dsddns/releases) page.
+Grab Linux, Windows, and MacOS binaries from the [releases](https://github.com/YoRyan/dsddns/releases) page.
 
 Or, to build and install your own copy,
 
