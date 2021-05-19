@@ -28,6 +28,9 @@ const (
 	dryRun
 )
 
+// Current version number; set with -ldflags "-X 'main.Version=x.x.x'"
+var Version string = "development"
+
 func main() {
 	flag.Usage = func() {
 		out := flag.CommandLine.Output()
@@ -38,7 +41,14 @@ func main() {
 	flag.BoolVar(&opDryRun, "dryrun", false, "read the configuration file, but do not push any updates")
 	var opRunOnce bool
 	flag.BoolVar(&opRunOnce, "oneshot", false, "run a single update")
+	var showVersion bool
+	flag.BoolVar(&showVersion, "version", false, "show the version number")
 	flag.Parse()
+
+	if showVersion {
+		fmt.Println(Version)
+		return
+	}
 
 	var op mode
 	if opDryRun {
