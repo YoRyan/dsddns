@@ -208,6 +208,7 @@ func (u *Updaters) Update(ctx context.Context, logger *log.Logger) {
 
 // DryRun tests all of the updaters in this slice.
 func (u *Updaters) DryRun(ctx context.Context, logger *log.Logger) {
+	logger.Println("(Dry run; no changes will be made.)")
 	for _, updater := range *u {
 		updater.DryRun(ctx, logger)
 	}
