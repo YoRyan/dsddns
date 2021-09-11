@@ -15,6 +15,7 @@ Currently, DsDDNS can manage A and AAAA records for the following services:
 - [Cloudflare](https://www.cloudflare.com/dns/)
 - [Duck DNS](https://www.duckdns.org/)
 - [Google Domains](https://domains.google/)
+- [No-IP](https://www.noip.com/) (and other services that use the protocol)
 
 ## Installation
 
@@ -87,7 +88,7 @@ Some keys apply to all kinds of records, regardless of service. The following ke
 | Key | Type | Value |
 | --- | --- | --- |
 | type | string | Specifies the type of DNS record. Can be `A` (IPv4) or `AAAA` (IPv6). |
-| service | string | <p>Specifies the dynamic DNS service that manages this record. Must be one of the following values:</p><ul><li>`cloudflare`</li><li>`duck`</li><li>`google`</li></ul> |
+| service | string | <p>Specifies the dynamic DNS service that manages this record. Must be one of the following values:</p><ul><li>`cloudflare`</li><li>`duck`</li><li>`genericnoip`</li><li>`google`</li><li>`noip`</li></ul> |
 
 The following keys are optional:
 
@@ -137,9 +138,24 @@ The following keys are mandatory for Duck DNS-managed records:
 </details>
 
 <details>
+<summary>Generic No-IP service</summary>
+
+The No-IP [dynamic DNS protocol](https://www.noip.com/integrate/request) is used not only by noip.com, but also many other service providers. So even if DsDDNS doesn't explicitly support your provider, it may still be possible to interact with it using this generic client.
+
+The No-IP protocol requires a username, password, and hostname. The endpoint—the destination address for all HTTP requests, such as `https://dynupdate.no-ip.com/nic/update`—is also mandatory. The protocol supports both A and AAAA records, but not all service providers actually have support for AAAA.
+
+| Key | Type | Value |
+| --- | --- | --- |
+| username | string | The username to send. |
+| password | string | The password to send. |
+| hostname | string | The hostname to send. |
+| endpoint | string | The HTTP endpoint to use, such as `https://dynupdate.no-ip.com/nic/update`. |
+</details>
+
+<details>
 <summary>Google Domains</summary>
 
-To [use a dynamic DNS client](https://support.google.com/domains/answer/6147083?hl=en) with Google Domains, you have to set up a synthetic record for the hostname you want to manage and then generate a username/password combination for the client.
+Google Domains [uses](https://support.google.com/domains/answer/6147083?hl=en) the No-IP protocol. To use dynamic DNS, you have to set up a synthetic record for the hostname you want to manage, and then generate a username/password combination for the client.
 
 The following keys are mandatory for Google-managed records:
 
@@ -148,6 +164,20 @@ The following keys are mandatory for Google-managed records:
 | username | string | The username generated for this dynamic DNS client. |
 | password | string | The password generated for this client. |
 | hostname | string | The FQDN for this record. |
+</details>
+
+<details>
+<summary>No-IP</summary>
+
+The No-IP dynamic DNS service available at noip.com, unsurprisingly, uses the No-IP protocol.
+
+The following keys are mandatory for records managed by No-IP:
+
+| Key | Type | Value |
+| --- | --- | --- |
+| username | string | Your No-IP email address. |
+| password | string | The password associated with your hostname. |
+| hostname | string | The hostname to update. |
 </details>
 
 ### Avoiding repetition with merge keys
