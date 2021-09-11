@@ -62,8 +62,12 @@ func (u *Updater) UnmarshalYAML(value *yaml.Node) error {
 		u.Service = &CloudflareService{}
 	case "duck":
 		u.Service = &DuckService{}
+	case "genericnoip":
+		u.Service = &NoIPService{}
+	case "noip":
+		u.Service = &NoIPService{DefinedEndpoint: "https://dynupdate.no-ip.com/nic/update"}
 	case "google":
-		u.Service = &GoogleService{}
+		u.Service = &NoIPService{DefinedEndpoint: "https://domains.google.com/nic/update"}
 	default:
 		return errors.New("unknown service")
 	}
