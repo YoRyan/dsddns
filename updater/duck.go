@@ -42,6 +42,7 @@ func (s *DuckService) Submit(ctx context.Context, rtype RecordType, ip net.IP) (
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
+		retryAfter = duckCooldown
 		err = errors.New("bad response code")
 		return
 	}
