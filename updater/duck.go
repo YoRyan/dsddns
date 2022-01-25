@@ -15,6 +15,7 @@ const (
 	duckCooldown = 15 * time.Minute
 )
 
+// DuckService implements the Duck DNS protocol.
 type DuckService struct {
 	conf *duckServiceConf
 }
@@ -24,6 +25,7 @@ type duckServiceConf struct {
 	Token   string
 }
 
+// Submit sends the provided IP address to the dynamic DNS service. In case of failure, it returns a retry delay and the error.
 func (s *DuckService) Submit(ctx context.Context, rtype RecordType, ip net.IP) (retryAfter time.Duration, err error) {
 	qs := url.Values{}
 	qs.Add("domains", s.conf.Subname)
@@ -49,10 +51,12 @@ func (s *DuckService) Submit(ctx context.Context, rtype RecordType, ip net.IP) (
 	return
 }
 
+// Identifier returns a human readable name for this service given its endpoint.
 func (s *DuckService) Identifier() string {
 	return s.conf.Subname + ".duckdns.org"
 }
 
+// SupportsRecord determines whether this service supports the provided DNS record type.
 func (s *DuckService) SupportsRecord(rtype RecordType) bool {
 	switch rtype {
 	case ARecord:
@@ -64,6 +68,7 @@ func (s *DuckService) SupportsRecord(rtype RecordType) bool {
 	}
 }
 
+// UnmarshalYAML constructs a service from a YAML configuration.
 func (s *DuckService) UnmarshalYAML(value *yaml.Node) error {
 	s.conf = &duckServiceConf{}
 	if err := value.Decode(s.conf); err != nil {

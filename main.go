@@ -28,7 +28,7 @@ const (
 	dryRun
 )
 
-// Current version number; set with -ldflags "-X 'main.Version=x.x.x'"
+// Version contains the program version number. Set it at build time with -ldflags "-X 'main.Version=x.x.x'".
 var Version string = "development"
 
 func main() {

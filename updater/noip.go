@@ -21,6 +21,7 @@ const (
 	noIPForever  = 10 * time.Hour * 24 * 365
 )
 
+// NoIPService implements the No-IP protocol. It requires an endpoint.
 type NoIPService struct {
 	DefinedEndpoint string
 	conf            *noIPServiceConf
@@ -33,6 +34,7 @@ type noIPServiceConf struct {
 	Endpoint string
 }
 
+// Submit sends the provided IP address to the dynamic DNS service. In case of failure, it returns a retry delay and the error.
 func (s *NoIPService) Submit(ctx context.Context, rtype RecordType, ip net.IP) (retryAfter time.Duration, err error) {
 	qs := url.Values{}
 	qs.Add("hostname", s.conf.Hostname)
@@ -88,10 +90,12 @@ func noIPError(response string) (retryAfter time.Duration, err error) {
 	return
 }
 
+// Identifier returns a human readable name for this service given its endpoint.
 func (s *NoIPService) Identifier() string {
 	return s.conf.Hostname
 }
 
+// SupportsRecord determines whether this service supports the provided DNS record type.
 func (s *NoIPService) SupportsRecord(rtype RecordType) bool {
 	switch rtype {
 	case ARecord:
@@ -103,6 +107,7 @@ func (s *NoIPService) SupportsRecord(rtype RecordType) bool {
 	}
 }
 
+// UnmarshalYAML constructs a service from a YAML configuration.
 func (s *NoIPService) UnmarshalYAML(value *yaml.Node) error {
 	s.conf = &noIPServiceConf{}
 	if err := value.Decode(s.conf); err != nil {

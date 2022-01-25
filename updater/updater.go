@@ -12,10 +12,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// RecordType represents a kind of dynamic DNS record.
 type RecordType int
 
 const (
+	// ARecord represents an IPv4 DNS record.
 	ARecord RecordType = iota
+
+	// AAAARecord represents an IPv6 DNS record.
 	AAAARecord
 )
 
@@ -44,6 +48,7 @@ type Updater struct {
 	yaml.Unmarshaler
 }
 
+// UnmarshalYAML constructs an updater from a YAML configuration.
 func (u *Updater) UnmarshalYAML(value *yaml.Node) error {
 	var aux struct {
 		Service    string
@@ -177,15 +182,15 @@ func AddIP(a net.IP, b net.IP) net.IP {
 func fromRight(ip net.IP, place int) byte {
 	if place >= len(ip) {
 		return 0
-	} else {
-		return ip[len(ip)-place-1]
 	}
+	return ip[len(ip)-place-1]
 }
 
 // Updaters represents a slice of updaters defined by a YAML configuration. All
 // updaters share the same IP address lookup cache.
 type Updaters []*Updater
 
+// UnmarshalYAML constructs a slice of updaters from a YAML configuration.
 func (u *Updaters) UnmarshalYAML(value *yaml.Node) error {
 	if value.Kind != yaml.SequenceNode {
 		return errors.New("expected a YAML sequence")

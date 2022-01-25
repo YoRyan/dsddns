@@ -23,11 +23,13 @@ type ipSource struct {
 	iname string
 }
 
+// IPLookup uses an Internet service to look up the machine's source IP address.
 type IPLookup struct {
 	cache     map[ipSource](net.IP)
 	retrieved map[ipSource](time.Time)
 }
 
+// NewIPLookup initializes a new IPLookup.
 func NewIPLookup() IPLookup {
 	var lookup IPLookup
 	lookup.cache = make(map[ipSource](net.IP))
@@ -37,6 +39,7 @@ func NewIPLookup() IPLookup {
 
 type dialContext func(context.Context, string, string) (net.Conn, error)
 
+// WebFacingIP looks up the machine's source IP address from the provided network interface.
 func (l IPLookup) WebFacingIP(ctx context.Context, rtype RecordType, intname string) net.IP {
 	key := ipSource{rtype, intname}
 	since := l.retrieved[key]
@@ -167,31 +170,31 @@ type ipService interface {
 
 type icanhazipService struct{}
 
-func (_ icanhazipService) IPv4Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+func (icanhazipService) IPv4Addr(ctx context.Context, dc dialContext) (net.IP, error) {
 	return retrieve(ctx, "https://v4.icanhazip.com", dc)
 }
 
-func (_ icanhazipService) IPv6Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+func (icanhazipService) IPv6Addr(ctx context.Context, dc dialContext) (net.IP, error) {
 	return retrieve(ctx, "https://v6.icanhazip.com", dc)
 }
 
 type ipifyService struct{}
 
-func (_ ipifyService) IPv4Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+func (ipifyService) IPv4Addr(ctx context.Context, dc dialContext) (net.IP, error) {
 	return retrieve(ctx, "https://api.ipify.org", dc)
 }
 
-func (_ ipifyService) IPv6Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+func (ipifyService) IPv6Addr(ctx context.Context, dc dialContext) (net.IP, error) {
 	return retrieve(ctx, "https://api6.ipify.org", dc)
 }
 
 type wtfismyipService struct{}
 
-func (_ wtfismyipService) IPv4Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+func (wtfismyipService) IPv4Addr(ctx context.Context, dc dialContext) (net.IP, error) {
 	return retrieve(ctx, "https://ipv4.wtfismyip.com/text", dc)
 }
 
-func (_ wtfismyipService) IPv6Addr(ctx context.Context, dc dialContext) (net.IP, error) {
+func (wtfismyipService) IPv6Addr(ctx context.Context, dc dialContext) (net.IP, error) {
 	return retrieve(ctx, "https://ipv6.wtfismyip.com/text", dc)
 }
 

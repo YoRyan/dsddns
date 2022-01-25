@@ -14,21 +14,23 @@ const (
 	cloudflareCooldown = 15 * time.Minute
 )
 
+// CloudflareService implements the Cloudflare DNS protocol.
 type CloudflareService struct {
 	conf *cloudflareServiceConf
 	api  *cloudflare.API
 }
 
 type cloudflareServiceConf struct {
-	ApiKey   string `yaml:"api_key"`
-	ApiEmail string `yaml:"api_email"`
-	ApiToken string `yaml:"api_token"`
+	APIKey   string `yaml:"api_key"`
+	APIEmail string `yaml:"api_email"`
+	APIToken string `yaml:"api_token"`
 	ZoneID   string `yaml:"zone_id"`
 	RecordID string `yaml:"record_id"`
 	Name     string
 	TTL      int
 }
 
+// Submit sends the provided IP address to the dynamic DNS service. In case of failure, it returns a retry delay and the error.
 func (s *CloudflareService) Submit(ctx context.Context, rtype RecordType, ip net.IP) (retryAfter time.Duration, err error) {
 	var ttl int
 	if s.conf.TTL <= 0 {
@@ -50,10 +52,12 @@ func (s *CloudflareService) Submit(ctx context.Context, rtype RecordType, ip net
 	return
 }
 
+// Identifier returns a human readable name for this service given its endpoint.
 func (s *CloudflareService) Identifier() string {
 	return s.conf.Name
 }
 
+// SupportsRecord determines whether this service supports the provided DNS record type.
 func (s *CloudflareService) SupportsRecord(rtype RecordType) bool {
 	switch rtype {
 	case ARecord:
@@ -65,19 +69,20 @@ func (s *CloudflareService) SupportsRecord(rtype RecordType) bool {
 	}
 }
 
+// UnmarshalYAML constructs a service from a YAML configuration.
 func (s *CloudflareService) UnmarshalYAML(value *yaml.Node) error {
 	s.conf = &cloudflareServiceConf{}
 	err := value.Decode(s.conf)
 	if err != nil {
 		return err
 	}
-	if s.conf.ApiKey != "" && s.conf.ApiEmail != "" {
-		s.api, err = cloudflare.New(s.conf.ApiKey, s.conf.ApiEmail)
+	if s.conf.APIKey != "" && s.conf.APIEmail != "" {
+		s.api, err = cloudflare.New(s.conf.APIKey, s.conf.APIEmail)
 		if err != nil {
 			return err
 		}
-	} else if s.conf.ApiToken != "" {
-		s.api, err = cloudflare.NewWithAPIToken(s.conf.ApiToken)
+	} else if s.conf.APIToken != "" {
+		s.api, err = cloudflare.NewWithAPIToken(s.conf.APIToken)
 		if err != nil {
 			return err
 		}
