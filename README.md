@@ -2,6 +2,8 @@
 
 DsDDNS is the Dual-Stack Dynamic DNS client. A dynamic DNS client keeps your DNS records in sync with the IP addresses associated with your home Internet connection, which are subject to reassignment by your ISP.
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/YoRyan/dsddns)](https://goreportcard.com/report/github.com/YoRyan/dsddns) ![Last commit](https://badgen.net/github/last-commit/YoRyan/dsddns/main) ![Checks status](https://badgen.net/github/checks/YoRyan/dsddns)
+
 DsDDNS is the world's first dynamic DNS client built from the ground-up for IPv6. In comparison to other dynamic DNS clients available on the Internet, including some others that support IPv6, DsDDNS features:
 
 - First-class support for IPv6, including the ability to update multiple hostnames within a dynamically allocated prefix—not just the one that refers to the host system.
