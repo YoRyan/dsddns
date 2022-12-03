@@ -45,7 +45,7 @@ func (s *CloudflareService) Submit(ctx context.Context, rtype RecordType, ip net
 		TTL:     ttl,
 	}
 	err = s.api.UpdateDNSRecord(ctx, s.conf.ZoneID, s.conf.RecordID, record)
-	var cfErr cloudflare.APIRequestError
+	var cfErr cloudflare.Error
 	if errors.As(err, &cfErr) {
 		retryAfter = cloudflareCooldown
 	}
